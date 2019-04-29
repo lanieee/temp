@@ -1,0 +1,34 @@
+.ib {
+    margin-top: 2em;
+    padding: 1em 3em;
+    border: 1px solid #008abc;
+}
+label {
+    width: 100%;
+    padding: 0.2em 0.5em;
+    font-size: 1em;
+    margin: 0.5em 0;
+    transition-duration: 0.2s
+}
+label:hover {
+    border-left: 3px solid skyblue;
+    background-color: #11111111;
+}
+#send {
+    position: absolute;
+    right: 60px;
+}
+.hide {
+    /*cursor: default !important;*/
+    opacity: 0;
+}
+.hide {
+    cursor: default !important;
+}
+#msg {
+    min-height: 2.5em;
+}
+.tc {
+    font-size: 1em;
+    margin: 2em;
+}

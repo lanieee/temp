@@ -1,0 +1,13 @@
+div.card.border-primary.mb-3 {
+    margin-top: 2em;
+    max-width: 45rem;
+}
+p.card-text {
+    margin-top: 0.5em;
+}
+.card-body{
+    padding: 0.5rem 2.25rem;
+}
+.list-group {
+    margin: 2em;
+}

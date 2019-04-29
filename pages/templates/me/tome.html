@@ -1,0 +1,84 @@
+{% extends "base/layout.html" %}
+{% load static %}
+
+{% block title %}tome{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tome.css' %}">
+{% endblock %}
+
+{% block bodyleft %}
+<div class="ib">
+    <div class="form-group">
+        <label for="subject"><i class="far fa-bookmark"></i> 主 题</label>
+            <input type="text" class="form-control" placeholder="主 题(选填)" id="subject" >
+        <label for="msg"><i class="far fa-envelope"></i> 内 容 *</label>
+        <textarea class="form-control" id="msg" rows="5"  placeholder="内 容" ></textarea>
+        <label for="sender"><i class="fas fa-phone-volume"></i> 联系方式</label>
+        <input type="text" class="form-control" placeholder="您的联系方式(选填),方便回复您" id="sender" >
+    </div>
+
+    <button id="send" type="button" class="btn btn-secondary">　<i class="far fa-share-square"></i> 发 送　</button>
+    <button type="button" class="btn btn-secondary hide">　</button>
+</div>
+{% endblock %}
+
+{% block bodyright %}
+    
+{% endblock %}
+
+{% block bodyjs %}
+    <script type="text/javascript">
+        function send_bind() {
+            $send = $(this);
+            // 获取内容
+            var subject = $("#subject").val()
+            var msg = $("#msg").val()
+            var sender = $("#sender").val()
+            // debugger;
+            if(!!msg) {
+                $.ajax({
+                    url: "/tomeAjax/",
+                    data: {
+                        "subject": subject,
+                        "msg": msg,
+                        "sender": sender
+                    },
+                    success: function(data){
+                        console.log("success");
+                        // debugger;
+                        if(data["send"] === 0){
+                            $send.attr('disabled', 'disabled');
+                            layer.open({
+                                type: 1,
+                                skin: 'layui-layer-lan', //样式类名
+                                closeBtn: 0, //不显示关闭按钮
+                                anim: 2,
+                                shadeClose: true, //开启遮罩关闭
+                                content: '<p class="tc text-danger"> <i class="fas fa-times"></i> 发送失败，当前已超过发送限制(3/h)</p>'
+                            });
+                        }else {
+                            layer.open({
+                                type: 1,
+                                skin: 'layui-layer-lan', //样式类名
+                                closeBtn: 0, //不显示关闭按钮
+                                anim: 2,
+                                shadeClose: true, //开启遮罩关闭
+                                content: '<p class="tc text-primary"> <i class="fas fa-check"></i> 发送成功</p>'
+                            });
+                        }
+                    },
+                    error: function(err){
+                        console.log("error");
+                    }
+                })
+            }
+        }
+        $(document).ready(function(){
+            $("li.nav-item").siblings().removeClass("active");
+            $("li[page-id='tome']").addClass('active');
+            // 绑定事件
+            $("#send").on("click", send_bind);
+        })
+    </script>
+{% endblock %}

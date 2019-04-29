@@ -1,0 +1,167 @@
+{% extends "base/layout.html" %}
+{% load static %}
+
+{% block title %}list{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/list.css' %}">
+    <link href="{% static 'libs/highlight.js/9.15.6/styles/atelier-cave-light.min.css' %}" rel="stylesheet" type="text/css" />
+
+    <link 
+    rel="stylesheet" 
+    href="https://unpkg.com/tippy.js@4/themes/light.css" 
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tippy.js@4/themes/light-border.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tippy.js@4/themes/google.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/tippy.js@4/themes/translucent.css"
+  />
+{% endblock %}
+{% block bodyleft %}
+  <h2 class="head">博文列表</h2>
+    {% if bloglist %}
+        <ul>
+        {% for blog in bloglist %}
+            
+            <div class="card border-primary mb-3 article">
+              <div class="card-header">
+                <a class="nav-link" href="{% url 'detail' blog.id %}">{{ blog.title }}</a>
+              </div>
+              <div class="card-body">
+                {% for tag in blog.tags.all %}
+                    <span class="badge badge-pill badge-primary">{{ tag }}</span>
+                {% endfor %}
+                <div class="card-text">
+                    <p class="hide">{{ blog.content }}</p>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <ul>
+          <div class="card border-info mb-3">
+            <div class="card-header">
+              <span class="badge badge-pill badge-primary">消 息</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">还没有文章呢</h5>
+            </div>
+          </div>
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block bodyright %}
+    <div class="card border-primary mb-3 tag">
+      <div class="card-header">
+         {# <span class="badge badge-pill badge-primary">标 签</span> #}
+         <h6>标签</h6>
+      </div>
+      <div class="card-body">
+          <a href="{% url 'list' %}" class="badge badge-pill badge-primary"> 全 部</a>
+          {% for tag in tags %}
+              <a class="badge badge-pill badge-primary" href="{% url 'list' %}?tag={{ tag.name | urlencode }}" title="有此标签的文章共{{ tag.articles.count }}章">{{ tag.name }}</a>
+          {% empty %}
+          <p>还没有标签哦</p>
+          {% endfor %}
+
+      </div>
+    </div>
+{% endblock %}
+
+  {% block bodyjs %}
+    <script src="{% static 'libs/marked/0.6.1/marked.min.js' %}"></script>
+
+    <script src="{% static 'libs/highlight.js/9.15.6/highlight.min.js' %}" type="text/javascript"></script>
+
+    <script src="{% static 'libs/highlightjs-line-numbers.js/2.6.0/highlightjs-line-numbers.min.js' %}" type="text/javascript"></script>
+    <script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@4"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("li.nav-item").siblings().removeClass("active");
+      $("li[page-id='list']").addClass('active');
+      /**
+       * HTML转义
+       */
+      function escapeForHTML(input) {
+          var escapeMap = {
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;"
+          };
+          return input.replace(/([&<>'"])/g, function(char) {
+              return escapeMap[char];
+          });
+      }
+
+      // 配置 highlightjs
+      hljs.configure({
+          tabReplace: '    ' // 4 spaces
+      })
+      // 配置 marked
+      marked.setOptions({
+          gfm: true,
+          pedantic: false,
+          sanitize: true,
+          xhtml: true,
+          tables: true,
+          langPrefix: 'hljs ',
+          highlight: function(code, lang) {
+              // 代码高亮(如果能识别出具体的语言的话)
+              if(!!(lang && hljs.getLanguage(lang))) {
+                  // 使用隐藏字段记录语言名称
+                  var langName = '<input type="hidden" class="lang-name" value="' + lang + '" />';
+                  // 代码高亮
+                  return langName + hljs.highlight(lang, code).value;
+              }
+              return escapeForHTML(code);
+          }
+      });
+
+        // 获取markdown源码
+        // var source = $('.hide').html();
+        // // 将markdown源码转为HTML，并更新到页面上
+        // $('.content-wrapper').html(marked(source));
+        $('.card.article').each(function(){
+            var source = $(this).find(".hide").html();
+            // console.log(source);
+            // $(this).find(".card-body").prop("data-content", marked(source))
+            // $(this).find(".card-text").html(marked(source));
+            // $(this).find(".card-body").popover();
+            tippy($(this).find(".card-body").get(0), {
+                // followCursor: true,
+                arrow: true,
+                // 延迟[显示, 消失]
+                delay: [100, 100],
+                placement: 'bottom',
+                theme: "light-border",
+                content: function(){
+                    return '<div style="text-align: left;">' + marked(source) + '</div>';
+                }
+            })
+        })
+
+      // 获取Markdown原内容
+      // document.querySelector('#content').innerHTML = marked(document.querySelector("#marked").innerText)
+
+      $('code.hljs').each(function(i, block) {
+          // 添加行号
+          hljs.lineNumbersBlock(block);
+      });
+
+    })
+  </script>
+
+  {% endblock %}
+

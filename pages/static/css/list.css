@@ -1,0 +1,42 @@
+div.card{
+    margin: 2em 2em;
+    width: 20em;
+    display: inline-block;
+}
+ul {
+    padding: 0;
+}
+.card-header{
+    padding: 0.4rem 1.25rem;
+}
+p.card-text {
+    margin-top: 0.5em;
+    font-size: 1.2em;
+}
+.card-body{
+    padding: 0.5rem 2.25rem;
+}
+.btn-info:hover{
+    box-shadow: 0 0 0 0.2rem rgba(116,201,227,0.5);
+}
+button.badge-primary {
+    border:none;
+}
+#content {
+    display:none;
+}
+.hide {
+    display: none;
+}
+
+.tippy-popper .tippy-tooltip {
+    max-width: 50em !important;
+    max-height: 30em !important;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 575px) {
+    .blog-sidebar .ib {
+        padding-left: 40px;
+    }
+}

@@ -1,0 +1,48 @@
+{% extends "base/layout.html" %}
+{% load static %}
+
+{% block title %}me{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/me.css' %}">
+{% endblock %}
+{% block bodyleft %}
+    <h2>关于我</h2>
+    <h7>昵称:</h7>
+    <p class="QQQQS text-muted"> nè</p>
+    <h7>性别:</h7>
+    <p class="QQQQS text-primary"> 男</p>
+    <h7>主学语言:</h7>
+    <p class="QQQQS text-secondary"> <a href="https://www.python.org/">Python</a></p>
+    <h7>其他技能:</h7>
+    <p class="QQQQS text-warning"> Flask</p>
+    <p class="QQQQS text-warning"> Django</p>
+    <p class="QQQQS text-warning"> Bootstrap</p>
+    <p class="QQQQS text-warning"> jQuery</p>
+    <h7>其他:</h7>
+    <p class="QQQQS text-danger"> 站位</p>
+    <h7>其他:</h7>
+    <p class="QQQQS text-success"> 站位</p>
+    <h7>其他:</h7>
+    <p class="QQQQS text-info"> 站位</p>
+{% endblock %}
+
+{% block bodyright %}
+    {% for jz in rhesis %}
+    <!-- 引用 -->
+    <blockquote class="blockquote">
+        <p class="rhesis">　　{{ jz.rhesis }}</p>
+        <footer class="blockquote-footer">{{ jz.author }}<cite title="Source Title"></cite></footer>
+    </blockquote>
+    {% empty %}
+    {% endfor %}
+{% endblock %}
+
+{% block bodyjs %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("li.nav-item").siblings().removeClass("active");
+        $("li[page-id='me']").addClass('active');
+    })
+</script>
+{% endblock %}
